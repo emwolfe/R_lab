@@ -142,13 +142,8 @@ Elwha_data$Dam_Condition <- as.factor(Elwha_data$Dam_Condition)
 ```
 
 Try doing the same for `Site_Name` by editing and running the following chunk:
-```{r factor_site_knit,echo=F,results='hide'}
 
-Elwha_data$Site_Name <- as.factor(Elwha_data$Site_Name) 
-
-```
-
-```{r factor_site, results='hide'}
+```{r factor_site}
 #your turn! change Site_Name to factor by replacing all instances of Dam_Condition with Site_Name, and then running the current chunk
 
 Elwha_data$Dam_Condition <- as.factor(Elwha_data$Dam_Condition)
@@ -172,7 +167,7 @@ Elwha_data[1:10,1:10]
 ```
 
 This is a bit more too wide for the console window. We can look at the first 5 rows and columns instead: 
-```{r preview_5, results='hide'}
+```{r preview_5}
 #your turn! change the parameters to preview the first 5 rows and the first 5 columns instead of the first 10 rows and columns, and then running the current chunk
 
 Elwha_data[1:10,1:10] 
@@ -226,7 +221,7 @@ sd_pH <- sd(Elwha_data$pH, na.rm = T); sd_pH
 
 We can do the same for `Temperature`:
 
-```{r temp_stats, results='hide'}
+```{r temp_stats}
 #your turn! calculate summary statistics for Temperature by replacing all instances of pH with Temperature, and then running the current chunk
 
 mean_pH <- mean(Elwha_data$pH, na.rm = T); mean_pH
@@ -242,7 +237,7 @@ What is the output in the console pane? Use the output to fill in Table 1 in the
 
 Let's repeat for `Dissolved_oxygen`:
 
-```{r DO_stats, results='hide'}
+```{r DO_stats}
 #your turn! calculate summary statistics for Dissolved_oxygen by replacing all instances of pH with Dissolved_oxygen, and then running the current chunk
 
 mean_pH <- mean(Elwha_data$pH, na.rm = T); mean_pH
@@ -280,7 +275,7 @@ pH.ttest <- t.test(pH~Dam_Condition, data=Elwha_data); pH.ttest
 The p-value is `r pH.ttest$p.value`, which is < 0.05 and statistically significant. Note that the means for each group are displayed at the end of the t-test output. We can report our results in the context of the study: **pH was significantly higher during dam removal compared to before dam removal (t=`r pH.ttest$statistic`, df=`r pH.ttest$parameter`, p=`r pH.ttest$p.value`)**. 
 
 Let's do the same for `Temperature`:
-```{r t_test_temp, results='hide'}
+```{r t_test_temp}
 #your turn! run a t-test for temp by replacing all instances of pH with Temperature, and then running the current chunk
 
 pH.ttest <- t.test(pH~Dam_Condition, data=Elwha_data); pH.ttest
@@ -288,7 +283,7 @@ pH.ttest <- t.test(pH~Dam_Condition, data=Elwha_data); pH.ttest
 ```
 
 ...and for `Dissolved_oxygen`:
-```{r t_test_DO, results='hide'}
+```{r t_test_DO}
 #your turn! run a t-test for Dissolved_oxygen by replacing all instances of pH with Dissolved_oxygen, and then running the current chunk
 
 pH.ttest <- t.test(pH~Dam_Condition, data=Elwha_data); pH.ttest
@@ -328,7 +323,7 @@ Is this result unexpected? Remember that we are comparing pH across 5 different 
 
 We can do the same for `Dissolved_oxygen`:
 
-```{r DO_ANOVA, results='hide'}
+```{r DO_ANOVA}
 #your turn! run an ANOVA comparing Dissolved_oxygen by replacing all instances of pH with Dissolved_oxygen, and then running the current chunk
 
 pH_ANOVA <- aov(pH~Site_Name, data=during_dam)
@@ -349,19 +344,10 @@ Let's try making a boxplot of pH by site during dam removal:
 
 plot(pH~Site_Name, data=during_dam, xlab="Sampling Site", ylab="pH")
 
-#if you get an error here like the one below, it is because Site_Name is chr, not factor, so check str(during_dam)
-
-# Error in plot.window(...) : need finite 'xlim' values
-# In addition: 
-# Warning messages:
-# 1: In xy.coords(x, y, xlabel, ylabel, log) : NAs introduced by coercion
-# 2: In min(x) : no non-missing arguments to min; returning Inf
-# 3: In max(x) : no non-missing arguments to max; returning -Inf
-
 ```
 
 Let's make one for `Dissolved_oxygen` as well:
-```{r DO_boxplot, results='hide'}
+```{r DO_boxplot}
 #your turn! make a boxplot of dissolved oxygen by site after dam removal by replacing all instances of pH with Dissolved_oxygen, and then running the current chunk. For the ylab argument, you should name it "Dissolved oxygen (mg/L)" since we know the units.
 
 plot(pH~Site_Name, data=during_dam, xlab="Sampling Site", ylab="pH")
@@ -373,30 +359,27 @@ What is the output in the viewer pane for your graph? Insert a copy of your boxp
 
 ## 4.2 Make a bar plot with `ggplot2`
 
-The `plot` function in base R gets the job done, but there are many options available for making other types of graphs with more customizable features. One of the most popular packages is `ggplot2`, which we will install and use to make a bar plot. `ggplot2` is housed within the `tidyverse`, so we will install and load those libraries, along with `plyr`, another library that we will need.
+The `plot` function in base R gets the job done, but there are many options available for making other types of graphs with more customizable features. One of the most popular packages is `ggplot2`, which we will install and use to make a bar plot. We will also need functions within `dplyr`. Both `ggplot2` and `dplyr` are housed within the [`tidyverse`](https://tidyverse.org/) library collection, so installing and loading the `tidyverse` package will also load `ggplot2` and `dplyr` (and 7 other data science packages).
 
 ```{r load_libraries}
-#run this chunk exactly as-is to install the packages and load the libraries in the necessary order
+#run this chunk exactly as-is to install the packages and load the libraries contained in tidyverse
 
-install.packages(c("plyr","tidyverse"))
-library(plyr)
-library(ggplot2)
+install.packages("tidyverse")
+library(tidyverse)
 
 ```
 
 Now that the libraries are loaded, we can use functions within them to make our bar plot. A bar plot is useful because we can show the mean value with error bars representing ± 1 standard deviation. 
 
-First we will calculate the mean and standard deviation values with `ddply`:
+First we will calculate the mean and standard deviation values:
 
-```{r pH_ddply}
+```{r pH_dplyr}
 
-pH_aov_plot <- ddply(during_dam,~Site_Name,summarize,mean=mean(pH, na.rm=TRUE),sd=sd(pH, na.rm = TRUE))
-
-pH_aov_plot #object that contains all of the data we need to plot
-
+pH_aov_plot <- during_dam %>% group_by(Site_Name) %>% summarize(mean=mean(pH,na.rm=T),sd=sd(pH,na.rm=T))
+  
 ```
 
-Now we will use `ggplot` to actually draw the figure with the coordinates calculated with `ddply`:
+Now we will use `ggplot` to actually draw the figure:
 
 ```{r pH_barplot}
 
@@ -408,10 +391,10 @@ pH_plot #displays the plot
 
 We can make bar plots for `Dissolved_oxygen` and `Temperature` as well:
 
-```{r DO_barplot, results='hide'}
+```{r DO_barplot}
 #your turn! make a barplot of dissolved oxygen by site after dam removal by replacing all instances of pH with Dissolved_oxygen, and then running the current chunk
 
-pH_aov_plot <- ddply(during_dam,~Site_Name,summarize,mean=mean(pH, na.rm=TRUE),sd=sd(pH, na.rm = TRUE))
+pH_aov_plot <- during_dam %>% group_by(Site_Name) %>% summarize(mean=mean(pH,na.rm=T),sd=sd(pH,na.rm=T))
 
 pH_aov_plot #object that contains all of the data we need to plot
 
@@ -421,10 +404,10 @@ pH_plot #displays the plot
 
 ```
 
-```{r temp_barplot, results='hide'}
+```{r temp_barplot}
 #your turn! make a barplot of temperature by site after dam removal by replacing all instances of pH with Temperature, and then running the current chunk
 
-pH_aov_plot <- ddply(during_dam,~Site_Name,summarize,mean=mean(pH, na.rm=TRUE),sd=sd(pH, na.rm = TRUE))
+pH_aov_plot <- during_dam %>% group_by(Site_Name) %>% summarize(mean=mean(pH,na.rm=T),sd=sd(pH,na.rm=T))
 
 pH_aov_plot #object that contains all of the data we need to plot
 
@@ -456,7 +439,7 @@ abline(DO_pH_reg) #plots our regression line
 
 ```
 
-```{r summaryDO,echo=F,results='hide'}
+```{r summaryDO}
 
 summaryDO<- summary(DO_pH_reg)
 
@@ -465,7 +448,7 @@ summaryDO<- summary(DO_pH_reg)
 We can report our results in the context of the study: There was no significant relationship between dissolved oxygen and pH (F=`r summaryDO$fstatistic[1]`; df=`r summaryDO$fstatistic[2]`,`r summaryDO$fstatistic[3]`; p=0.2319). pH only explains `r summaryDO$adj.r.squared[1]*100`% of the variation in dissolved oxygen. 
 
 Let's do the same for `Dissolved_oxygen` and `Temperature`:
-```{r temp_DO_scatter_lm,results='hide'}
+```{r temp_DO_scatter_lm}
 #your turn! make a scatterplot of dissolved oxygen by temperature by replacing all instances of pH with Temperature, and then running the current chunk
 
 DO_pH_reg <- lm(Dissolved_oxygen~pH, data=Elwha_data)
@@ -480,6 +463,9 @@ What is the output in the console and viewer panes? Copy-paste the output and in
 
 ### Q12-Q15
 This concludes the portion of the activity that is run with R. Answer the remaining questions directly in the write-up.
+
+# Troubleshooting
+Please refer to [this page](https://github.com/emwolfe/R_lab/wiki/Troubleshooting) for common troubleshooting steps.
 
 If you have any technical feedback, please contact the author through [GitHub](https://github.com/emwolfe).
 
