@@ -258,7 +258,8 @@ A statistical test starts from a null hypothesis (H₀): the statement of "no ef
 
 There are many different kinds of statistical tests, each with their own sets of assumptions. Which test you use depends on your question and your types of data (Figure 2). For simplicity, we are running parametric statistical tests in this lab and assuming that assumptions of normality and homoscedascity are met without transformation.
 
-![Figure 2. Choosing a statistical test. Y is the continuous measurement you are explaining (the response); X is the variable you think explains it.](stat_tests_fig2.png)
+![Figure 2. Choosing a statistical test. Y is the continuous measurement you are explaining (the response); X is the variable you think explains it.](test_choice_flowchart.png)
+
 
 Our dataset includes the independent categorical variable `Dam_Condition` which has two levels or values: `Before removal` and `After removal`. It also includes the independent categorical variable `Site_Name` for the five sites that were sampled. There are also 9 water quality parameters which are dependent continuous variables. We can use statistical tests to compare various water quality parameters before and after dam removal to determine if there is a statistically significant effect. In other words: **Did dam removal on the Elwha River affect water quality?** 
 
@@ -376,6 +377,8 @@ First we will calculate the mean and standard deviation values:
 ```{r pH_dplyr}
 
 pH_aov_plot <- during_dam %>% group_by(Site_Name) %>% summarize(mean=mean(pH,na.rm=T),sd=sd(pH,na.rm=T))
+
+pH_aov_plot #object that contains all of the data we need to plot
   
 ```
 
@@ -455,7 +458,7 @@ abline(DO_pH_reg) #plots our regression line
 ### Q11
 What is the output in the console and viewer panes? Copy-paste the output and insert a copy of your scatterplot to answer Question 11 in the write-up that will be submitted for grading.
 
-### Q12-Q15
+### Q12-Q14
 This concludes the portion of the activity that is run with R. Answer the remaining questions directly in the write-up.
 
 # Troubleshooting

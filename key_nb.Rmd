@@ -1,0 +1,309 @@
+---
+title: "Instructor notebook"
+author: Emily Wolfe
+output:
+  html_document:
+    df_print: paged
+editor_options:
+  chunk_output_type: console
+---
+Run all chunks of this notebook to produce the instructor key. You can either knit it to html or scroll back through the console to see the outputs. Alternatively, you can change the chunk output setting from console to in-line, which will show the outputs below each chunk.
+
+```{r check_wd, echo=T}
+#find your current working directory information by running this chunk
+getwd()
+
+```
+
+```{r load_data}
+
+Elwha_data <- read.csv("cleaned_data.csv",check.names = T)
+
+```
+
+```{r str_data, echo=T}
+
+str(Elwha_data)
+
+```
+
+```{r factor_dam}
+
+Elwha_data$Dam_Condition <- as.factor(Elwha_data$Dam_Condition) 
+
+#the dollar sign helps us give R an absolute reference, similar to Excel syntax 
+
+```
+
+```{r factor_site}
+#your turn! change Site_Name to factor by replacing all instances of Dam_Condition with Site_Name, and then running the current chunk
+
+#instructor note: you can replace terms manually, or you can use the find/replace feature in RStudio (magnifying glass icon). If using the find/replace option, you must select the text in the chunk and make sure to check "in selection" before replacing. Otherwise, you may inadvertently replace terms in the entire document.
+
+Elwha_data$Site_Name <- as.factor(Elwha_data$Site_Name)
+
+```
+
+```{r str_check}
+
+str(Elwha_data)
+
+```
+
+```{r preview_10}
+
+Elwha_data[1:10,1:10] 
+
+#lets us preview the first 10 rows and columns, respectively - [r,c], and the : between numbers means that you are looking at the continuous range between them, like what appears in Excel when you select consecutive cells. You could read it as “through,” so that 1:10 would read 1 through 10.
+
+```
+
+```{r preview_5}
+#your turn! change the parameters to preview the first 5 rows and the first 5 columns instead of the first 10 rows and columns, and then running the current chunk
+
+Elwha_data[1:5,1:5] 
+
+```
+
+```{r pH_mean}
+
+mean_pH <- mean(Elwha_data$pH); mean_pH
+
+```
+
+```{r pH_val}
+
+Elwha_data$pH
+
+```
+
+```{r pH_mean_na.rm}
+
+mean_pH <- mean(Elwha_data$pH, na.rm = T); mean_pH
+
+```
+
+```{r pH_stats}
+mean_pH <- mean(Elwha_data$pH, na.rm = T); mean_pH
+median_pH <- median(Elwha_data$pH, na.rm = T); median_pH
+min(Elwha_data$pH, na.rm = T)
+max(Elwha_data$pH, na.rm = T)
+sd_pH <- sd(Elwha_data$pH, na.rm = T); sd_pH
+
+#note the use of a semi-colon to combine multiple commands to be more efficient
+
+```
+
+```{r temp_stats}
+#your turn! calculate summary statistics for Temperature by replacing all instances of pH with Temperature, and then running the current chunk
+
+#instructor note: you don't actually have to replace with "Temperature" in object names. You only need to replace pH with Temperature when it is a reference to a variable, e.g., preceded by $
+
+mean_Temperature <- mean(Elwha_data$Temperature, na.rm = T); mean_Temperature
+median_Temperature <- median(Elwha_data$Temperature, na.rm = T); median_Temperature
+min(Elwha_data$Temperature, na.rm = T)
+max(Elwha_data$Temperature, na.rm = T)
+sd_Temperature <- sd(Elwha_data$Temperature, na.rm = T); sd_Temperature
+
+#instructor note: this is an alternate version to demonstrate that pH doesn't need to be replaced with Temperature in all instances where pH appears, only where it is referencing the variable:
+
+mean_temp <- mean(Elwha_data$Temperature, na.rm = T); mean_temp
+median_temp <- median(Elwha_data$Temperature, na.rm = T); median_temp
+min(Elwha_data$Temperature, na.rm = T)
+max(Elwha_data$Temperature, na.rm = T)
+sd_temp <- sd(Elwha_data$Temperature, na.rm = T); sd_temp
+
+
+```
+
+```{r DO_stats}
+#your turn! calculate summary statistics for Dissolved_oxygen by replacing all instances of pH with Dissolved_oxygen, and then running the current chunk
+
+mean_Dissolved_oxygen <- mean(Elwha_data$Dissolved_oxygen, na.rm = T); mean_Dissolved_oxygen
+median_Dissolved_oxygen <- median(Elwha_data$Dissolved_oxygen, na.rm = T); median_Dissolved_oxygen
+min(Elwha_data$Dissolved_oxygen, na.rm = T)
+max(Elwha_data$Dissolved_oxygen, na.rm = T)
+sd_Dissolved_oxygen <- sd(Elwha_data$Dissolved_oxygen, na.rm = T); sd_Dissolved_oxygen
+
+#instructor note: this is an alternate version to demonstrate that pH doesn't need to be replaced with Dissolved_oxygen in all instances where pH appears, only where it is referencing the variable:
+
+mean_DO <- mean(Elwha_data$Dissolved_oxygen, na.rm = T); mean_DO
+median_DO <- median(Elwha_data$Dissolved_oxygen, na.rm = T); median_DO
+min(Elwha_data$Dissolved_oxygen, na.rm = T)
+max(Elwha_data$Dissolved_oxygen, na.rm = T)
+sd_DO <- sd(Elwha_data$Dissolved_oxygen, na.rm = T); sd_DO
+
+```
+
+```{r t_test_pH}
+
+pH.ttest <- t.test(pH~Dam_Condition, data=Elwha_data); pH.ttest
+
+```
+
+```{r t_test_temp}
+#your turn! run a t-test for temp by replacing all instances of pH with Temperature, and then running the current chunk
+
+Temperature.ttest <- t.test(Temperature~Dam_Condition, data=Elwha_data); Temperature.ttest
+
+#instructor note: alternate version example
+
+temp.ttest <- t.test(Temperature~Dam_Condition, data=Elwha_data); temp.ttest
+
+```
+
+```{r t_test_DO}
+#your turn! run a t-test for Dissolved_oxygen by replacing all instances of pH with Dissolved_oxygen, and then running the current chunk
+
+Dissolved_oxygen.ttest <- t.test(Dissolved_oxygen~Dam_Condition, data=Elwha_data); Dissolved_oxygen.ttest
+
+#instructor note: alternate version example
+
+DO.ttest <- t.test(Dissolved_oxygen~Dam_Condition, data=Elwha_data); DO.ttest
+
+```
+
+```{r during_subset}
+
+during_dam <- subset(Elwha_data,Elwha_data$Dam_Condition=="During removal")
+during_dam[1:5,1:5]
+
+```
+
+```{r pH_ANOVA}
+
+pH_ANOVA <- aov(pH~Site_Name, data=during_dam)
+summarypH <- summary(pH_ANOVA); summarypH
+
+```
+
+```{r DO_ANOVA}
+#your turn! run an ANOVA comparing Dissolved_oxygen by replacing all instances of pH with Dissolved_oxygen, and then running the current chunk
+
+Dissolved_oxygen_ANOVA <- aov(Dissolved_oxygen~Site_Name, data=during_dam)
+summaryDissolved_oxygen <- summary(Dissolved_oxygen_ANOVA); summaryDissolved_oxygen
+
+#instructor note: alternate version example
+DO_ANOVA <- aov(Dissolved_oxygen~Site_Name, data=during_dam)
+summaryDO <- summary(DO_ANOVA); summaryDO
+
+```
+
+```{r pH_boxplot}
+
+plot(pH~Site_Name, data=during_dam, xlab="Sampling Site", ylab="pH")
+
+```
+
+```{r DO_boxplot}
+#your turn! make a boxplot of dissolved oxygen by site after dam removal by replacing all instances of pH with Dissolved_oxygen, and then running the current chunk. For the ylab argument, you should name it "Dissolved oxygen (mg/L)" since we know the units.
+
+plot(Dissolved_oxygen~Site_Name, data=during_dam, xlab="Sampling Site", ylab="Dissolved oxygen (mg/L)")
+
+```
+
+```{r load_libraries}
+#run this chunk exactly as-is to install the packages and load the libraries contained in tidyverse
+
+install.packages("tidyverse")
+library(tidyverse)
+
+```
+
+```{r pH_dplyr}
+
+pH_aov_plot <- during_dam %>% group_by(Site_Name) %>% summarize(mean=mean(pH,na.rm=T),sd=sd(pH,na.rm=T))
+
+pH_aov_plot #object that contains all of the data we need to plot
+  
+```
+
+```{r pH_barplot}
+
+pH_plot <- ggplot(pH_aov_plot, aes(x=Site_Name, y=mean)) + geom_bar(aes(fill=Site_Name),stat="identity", color="black", position=position_dodge()) + geom_errorbar(aes(ymin=mean-sd, ymax=mean+sd)) + labs(x="Sample Site",y="pH",fill="Sample Site")
+
+pH_plot #displays the plot
+
+```
+
+```{r DO_barplot}
+#your turn! make a barplot of dissolved oxygen by site after dam removal by replacing all instances of pH with Dissolved_oxygen, and then running the current chunk
+
+Dissolved_oxygen_aov_plot <- during_dam %>% group_by(Site_Name) %>% summarize(mean=mean(Dissolved_oxygen,na.rm=T),sd=sd(Dissolved_oxygen,na.rm=T))
+
+Dissolved_oxygen_aov_plot #object that contains all of the data we need to plot
+
+Dissolved_oxygen_plot <- ggplot(Dissolved_oxygen_aov_plot, aes(x=Site_Name, y=mean)) + geom_bar(aes(fill=Site_Name),stat="identity", color="black", position=position_dodge()) + geom_errorbar(aes(ymin=mean-sd, ymax=mean+sd)) + labs(x="Sample Site",y="Dissolved_oxygen  (mg/L)",fill="Sample Site")
+
+Dissolved_oxygen_plot #displays the plot
+
+#instructor note: alternate version example
+DO_aov_plot <- during_dam %>% group_by(Site_Name) %>% summarize(mean=mean(Dissolved_oxygen,na.rm=T),sd=sd(Dissolved_oxygen,na.rm=T))
+
+DO_aov_plot #object that contains all of the data we need to plot
+
+DO_plot <- ggplot(DO_aov_plot, aes(x=Site_Name, y=mean)) + geom_bar(aes(fill=Site_Name),stat="identity", color="black", position=position_dodge()) + geom_errorbar(aes(ymin=mean-sd, ymax=mean+sd)) + labs(x="Sample Site",y="Dissolved_oxygen (mg/L)",fill="Sample Site")
+
+DO_plot #displays the plot
+
+```
+
+```{r temp_barplot}
+#your turn! make a barplot of temperature by site after dam removal by replacing all instances of pH with Temperature, and then running the current chunk
+
+Temperature_aov_plot <- during_dam %>% group_by(Site_Name) %>% summarize(mean=mean(Temperature,na.rm=T),sd=sd(Temperature,na.rm=T))
+
+Temperature_aov_plot #object that contains all of the data we need to plot
+
+Temperature_plot <- ggplot(Temperature_aov_plot, aes(x=Site_Name, y=mean)) + geom_bar(aes(fill=Site_Name),stat="identity", color="black", position=position_dodge()) + geom_errorbar(aes(ymin=mean-sd, ymax=mean+sd)) + labs(x="Sample Site",y="Temperature (°C)",fill="Sample Site")
+
+Temperature_plot #displays the plot
+
+#instructor note: alternate version example
+temp_aov_plot <- during_dam %>% group_by(Site_Name) %>% summarize(mean=mean(Temperature,na.rm=T),sd=sd(Temperature,na.rm=T))
+
+temp_aov_plot #object that contains all of the data we need to plot
+
+temp_plot <- ggplot(temp_aov_plot, aes(x=Site_Name, y=mean)) + geom_bar(aes(fill=Site_Name),stat="identity", color="black", position=position_dodge()) + geom_errorbar(aes(ymin=mean-sd, ymax=mean+sd)) + labs(x="Sample Site",y="Temperature (°C)",fill="Sample Site")
+
+temp_plot #displays the plot
+
+```
+
+```{r ph_DO_scatter}
+
+plot(Dissolved_oxygen~pH, data=Elwha_data,xlab="pH", ylab="Dissolved oxygen (mg/L)") #for units on Dissolved oxygen, we should check the metadata
+
+```
+
+```{r pH_DO_lm}
+DO_pH_reg <- lm(Dissolved_oxygen~pH, data=Elwha_data)
+summary(DO_pH_reg) #our results
+
+plot(Dissolved_oxygen~pH, data=Elwha_data,xlab="pH", ylab="Dissolved oxygen (mg/L)") #for units on Dissolved oxygen, we should check the metadata
+abline(DO_pH_reg) #plots our regression line
+
+```
+
+```{r temp_DO_scatter_lm}
+#your turn! make a scatterplot of dissolved oxygen by temperature by replacing all instances of pH with Temperature, and then running the current chunk
+
+DO_Temperature_reg <- lm(Dissolved_oxygen~Temperature, data=Elwha_data)
+summary(DO_Temperature_reg) #our results
+
+plot(Dissolved_oxygen~Temperature, data=Elwha_data,xlab="Temperature (°C)", ylab="Dissolved oxygen (mg/L)") #for units on Dissolved oxygen, we should check the metadata
+abline(DO_Temperature_reg) #plots our regression line
+
+#instructor note: alternate version example
+DO_temp_reg <- lm(Dissolved_oxygen~Temperature, data=Elwha_data)
+summary(DO_temp_reg) #our results
+
+plot(Dissolved_oxygen~Temperature, data=Elwha_data,xlab="Temperature (°C)", ylab="Dissolved oxygen (mg/L)") #for units on Dissolved oxygen, we should check the metadata
+abline(DO_temp_reg) #plots our regression line
+
+```
+
+```{r version}
+version
+```
+
