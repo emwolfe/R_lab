@@ -439,12 +439,6 @@ abline(DO_pH_reg) #plots our regression line
 
 ```
 
-```{r summaryDO}
-
-summaryDO<- summary(DO_pH_reg)
-
-```
-
 We can report our results in the context of the study: There was no significant relationship between dissolved oxygen and pH (F=`r summaryDO$fstatistic[1]`; df=`r summaryDO$fstatistic[2]`,`r summaryDO$fstatistic[3]`; p=0.2319). pH only explains `r summaryDO$adj.r.squared[1]*100`% of the variation in dissolved oxygen. 
 
 Let's do the same for `Dissolved_oxygen` and `Temperature`:
